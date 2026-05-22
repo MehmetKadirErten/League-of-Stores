@@ -1,9 +1,8 @@
-{% comment %} main-product.liquid {% endcomment %}
 <div class="pg-root" id="root">
   <div class="bg-particles" id="particles"></div>
 
   <div class="pg-header">
-    <div class="breadcrumb">MAĞAZA <span>/ {{ product.type | upcase }}</span></div>
+    <div class="breadcrumb">MAĞAZA <span>/ {{ product.vendor | upcase }} / GİYSİLER</span></div>
     <button class="wishlist-btn" id="wishlistBtn" onclick="toggleWishlist()">
       <span class="heart">♡</span> İSTEK LİSTESİ
     </button>
@@ -13,20 +12,27 @@
     <div class="gallery">
       <div class="main-img-wrap">
         <div class="badge-new">YENİ SEZON</div>
-        <img src="{{ product.featured_image | image_url: width: 800 }}" alt="{{ product.title }}">
+        
+        {% if product.featured_image %}
+          <img src="{{ product.featured_image | image_url: width: 800 }}" alt="{{ product.title }}" style="width: 80%; height: 80%; object-fit: contain; position: relative; z-index: 2; transition: transform 0.4s; cursor: zoom-in;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
+        {% else %}
+          <div style="color: #C8AA6E; z-index: 2; position: relative;">Görsel Bekleniyor</div>
+        {% endif %}
+
         <div class="zoom-hint">🔍 YAKLAŞTIR</div>
       </div>
+      
       <div class="thumbnails">
         {% for image in product.images limit: 4 %}
-        <div class="thumb {% if forloop.first %}active{% endif %}">
-            <img src="{{ image | image_url: width: 100 }}" alt="{{ image.alt }}">
-        </div>
+          <div class="thumb {% if forloop.first %}active{% endif %}">
+            <img src="{{ image | image_url: width: 100 }}" style="width: 60%; height: 60%; object-fit: contain;">
+          </div>
         {% endfor %}
       </div>
     </div>
 
     <div class="info">
-      <div class="faction-tag">{{ product.vendor | upcase }}</div>
+      <div class="faction-tag">{{ product.vendor | default: "RUNETERRA" | upcase }}</div>
       <h1 class="product-title">{{ product.title }}</h1>
 
       <div class="rating-row">
@@ -38,31 +44,158 @@
       <div class="price-row">
         <span class="price-main">{{ product.price | money }}</span>
         {% if product.compare_at_price > product.price %}
-            <span class="price-old">{{ product.compare_at_price | money }}</span>
+          <span class="price-old">{{ product.compare_at_price | money }}</span>
+          <span class="price-badge">İNDİRİM</span>
         {% endif %}
       </div>
 
       <p class="desc">{{ product.description }}</p>
 
       {% form 'product', product %}
+        <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+        
         <div class="action-row">
           <div class="qty-wrap">
             <button type="button" class="qty-btn" onclick="changeQty(-1)">−</button>
-            <input type="number" name="quantity" value="1" class="qty-num" id="qtyNum" min="1" readonly>
+            <input type="number" name="quantity" class="qty-num" value="1" id="qtyNum" min="1" max="10" readonly>
             <button type="button" class="qty-btn" onclick="changeQty(1)">+</button>
           </div>
-          <button type="submit" class="btn-add" id="addBtn">
+          
+          <button type="submit" class="btn-add" id="addBtn" onclick="animateCartBtn(event)">
             <span class="shine"></span>
             SEPETE EKLE
           </button>
         </div>
       {% endform %}
+
+      <div style="display:flex; gap:16px; margin-bottom:22px; font-size:13px; color:rgba(200,170,110,0.6);">
+        <span style="color:rgba(100,200,130,0.8);">✓ Stokta mevcut</span>
+        <span>🚚 2-4 iş günü kargo</span>
+        <span>↩ 30 gün iade</span>
+      </div>
+
+      <div class="features">
+        <div class="feat"><span class="feat-icon">🧵</span> %100 Organik Pamuk</div>
+        <div class="feat"><span class="feat-icon">✨</span> Hextech Baskı</div>
+        <div class="feat"><span class="feat-icon">🌙</span> Solmaz Renk</div>
+        <div class="feat"><span class="feat-icon">♻</span> Sürdürülebilir</div>
+      </div>
+
+      <hr class="divider">
+
+      <div>
+        <div class="accordion-item" id="acc1">
+          <button class="accordion-header" onclick="toggleAcc('acc1')">
+            ÜRÜN DETAYLARI <span class="accordion-arrow">∨</span>
+          </button>
+          <div class="accordion-body" id="acc1-body">
+            Kesim: Regular fit • Yaka: O yaka • Kollar: Kısa • Gramaj: 220g/m² • Yıkama: 30°C hassas yıkama • Menşei: Demacia (Türkiye'de üretilmiştir) • Baskı: DTG dijital baskı, su bazlı mürekkep
+          </div>
+        </div>
+        <div class="accordion-item" id="acc2">
+          <button class="accordion-header" onclick="toggleAcc('acc2')">
+            KARGO VE İADE <span class="accordion-arrow">∨</span>
+          </button>
+          <div class="accordion-body" id="acc2-body">
+            Standart kargo 2-4 iş günü içinde teslim edilir. 150 TL üzeri alışverişlerde kargo ücretsizdir. Ürünü teslim aldıktan itibaren 30 gün içinde iade talebinde bulunabilirsiniz. İade edilen ürünlerin etiketi takılı ve kullanılmamış olması gerekmektedir.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reviews-section" id="reviews-section">
+    <div class="section-title">Yorumlar</div>
+    <div class="rating-summary">
+      <div class="big-rating">
+        <div class="big-num">4.8</div>
+        <div class="big-stars">★★★★★</div>
+        <div class="big-count">247 YORUM</div>
+      </div>
+      <div class="rating-bars">
+        <div class="bar-row"><span style="min-width:12px">5</span><div class="bar-track"><div class="bar-fill" data-w="82%"></div></div><span>82%</span></div>
+        <div class="bar-row"><span style="min-width:12px">4</span><div class="bar-track"><div class="bar-fill" data-w="12%"></div></div><span>12%</span></div>
+        <div class="bar-row"><span style="min-width:12px">3</span><div class="bar-track"><div class="bar-fill" data-w="4%"></div></div><span>4%</span></div>
+      </div>
     </div>
   </div>
 </div>
 
+<div class="toast" id="toast">✓ &nbsp;Sepete eklendi</div>
+
 <script>
-// (Senin verdiğin JS kodlarının tamamını buraya yapıştır)
-// SadeceaddToCart fonksiyonunu Shopify formuna uyarladık, 
-// form zaten çalışacaktır.
+// Senin yazdığın JavaScript kodlarının birebir aynısı
+let qty = 1;
+
+function createParticles() {
+  const container = document.getElementById('particles');
+  if(!container) return;
+  for (let i = 0; i < 20; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (8 + Math.random() * 12) + 's';
+    p.style.animationDelay = (Math.random() * 10) + 's';
+    p.style.width = p.style.height = (1 + Math.random() * 2) + 'px';
+    p.style.opacity = Math.random() * 0.5;
+    container.appendChild(p);
+  }
+}
+createParticles();
+
+function changeQty(delta) {
+  qty = Math.max(1, Math.min(10, qty + delta));
+  document.getElementById('qtyNum').value = qty;
+}
+
+function animateCartBtn(e) {
+  // Formun Shopify'a gitmesini engellemeden sadece görsel animasyon yapar
+  const btn = document.getElementById('addBtn');
+  btn.classList.add('added');
+  btn.innerHTML = '✓ EKLENDİ';
+  showToast('Sepete eklendi (' + qty + ' adet)');
+  setTimeout(() => {
+    btn.classList.remove('added');
+    btn.innerHTML = '<span class="shine"></span>SEPETE EKLE';
+  }, 2000);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  if(!t) return;
+  t.textContent = '✓  ' + msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function toggleWishlist() {
+  const btn = document.getElementById('wishlistBtn');
+  btn.classList.toggle('active');
+  const heart = btn.querySelector('.heart');
+  if (btn.classList.contains('active')) {
+    heart.textContent = '♥';
+    showToast('İstek listesine eklendi!');
+  } else {
+    heart.textContent = '♡';
+    showToast('İstek listesinden çıkarıldı');
+  }
+}
+
+function toggleAcc(id) {
+  const item = document.getElementById(id);
+  const body = document.getElementById(id + '-body');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.accordion-item').forEach(i => { 
+    i.classList.remove('open'); 
+    let b = document.getElementById(i.id + '-body');
+    if(b) b.classList.remove('open'); 
+  });
+  if (!isOpen) { item.classList.add('open'); body.classList.add('open'); }
+}
+
+setTimeout(() => {
+  document.querySelectorAll('.bar-fill').forEach(bar => {
+    bar.style.width = bar.dataset.w;
+  });
+}, 600);
 </script>
