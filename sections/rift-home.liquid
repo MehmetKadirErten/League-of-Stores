@@ -1,0 +1,176 @@
+<div class="hero">
+  <div class="hero-content">
+    <div class="hero-tag">Sezon 2025 Koleksiyonu</div>
+    <h1 class="hero-title">Runnetera'yı<br><span>Yanına Getir!</span></h1>
+    <p class="hero-desc">Efsanevi şampiyonlardan ilham alan özel tasarım ürünler. Oyunun ruhunu günlük hayatına taşı.</p>
+    <div class="hero-btns">
+      <button class="btn-primary">Alışverişe Başla</button>
+      <button class="btn-secondary">Yeni Ürünler</button>
+    </div>
+  </div>
+  
+  <div class="hero-slider-wrap">
+    <div class="hero-slider" id="heroSlider">
+      <div class="slide-item">
+        <div class="slide-placeholder-img">Görsel Alanı 1 (500x550)</div>
+        <div class="slide-title">Öne Çıkan Ürün 1</div>
+        <div class="slide-desc">Büyük ürün açıklaması buraya gelecek.</div>
+      </div>
+      <div class="slide-item">
+        <div class="slide-placeholder-img">Görsel Alanı 2 (500x550)</div>
+        <div class="slide-title">Öne Çıkan Ürün 2</div>
+        <div class="slide-desc">Büyük ürün açıklaması buraya gelecek.</div>
+      </div>
+    </div>
+    <div class="slider-nav">
+      <div class="slider-dot active"></div>
+      <div class="slider-dot"></div>
+    </div>
+  </div>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <div class="section-title-wrap">
+      <div class="ornament-diamond"></div>
+      <span class="section-title">Kategoriler</span>
+      <div class="section-line"></div>
+    </div>
+    <a href="#" class="view-all">Tümünü Gör →</a>
+  </div>
+  <div class="cat-grid">
+    </div>
+</div>
+
+<div class="section-divider"></div>
+
+<div class="section" style="padding-top:0;">
+  <div class="section-header">
+    <div class="section-title-wrap">
+      <div class="ornament-diamond"></div>
+      <span class="section-title">Öne Çıkan Ürünler</span>
+      <div class="section-line"></div>
+    </div>
+    <a href="#" class="view-all">Tümünü Gör →</a>
+  </div>
+  <div class="product-grid">
+
+    <div class="product-card">
+      <div class="product-img">
+        <div class="product-glow"></div>
+        <div class="img-placeholder-text">Görsel Eklenecek</div>
+      </div>
+      <div class="product-info">
+        <div class="product-champion">Şampiyon Adı</div>
+        <div class="product-name">Ürün Adı Şablonu</div>
+        <div class="product-rating">
+          <span class="stars">☆☆☆☆☆</span>
+          <span class="rating-count">(0)</span>
+        </div>
+        <div class="product-footer">
+          <div class="price-wrap">
+            <div class="price">₺0</div>
+            <div class="price-rp">veya 0 RP</div>
+          </div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="product-img">
+        <div class="product-glow"></div>
+        <div class="img-placeholder-text">Görsel Eklenecek</div>
+      </div>
+      <div class="product-info">
+        <div class="product-champion">Şampiyon Adı</div>
+        <div class="product-name">Ürün Adı Şablonu</div>
+        <div class="product-rating">
+          <span class="stars">☆☆☆☆☆</span>
+          <span class="rating-count">(0)</span>
+        </div>
+        <div class="product-footer">
+          <div class="price-wrap">
+            <div class="price">₺0</div>
+            <div class="price-rp">veya 0 RP</div>
+          </div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="product-img">
+        <div class="product-glow"></div>
+        <div class="img-placeholder-text">Görsel Eklenecek</div>
+      </div>
+      <div class="product-info">
+        <div class="product-champion">Şampiyon Adı</div>
+        <div class="product-name">Ürün Adı Şablonu</div>
+        <div class="product-rating">
+          <span class="stars">☆☆☆☆☆</span>
+          <span class="rating-count">(0)</span>
+        </div>
+        <div class="product-footer">
+          <div class="price-wrap">
+            <div class="price">₺0</div>
+            <div class="price-rp">veya 0 RP</div>
+          </div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="product-img">
+        <div class="product-glow"></div>
+        <div class="img-placeholder-text">Görsel Eklenecek</div>
+      </div>
+      <div class="product-info">
+        <div class="product-champion">Şampiyon Adı</div>
+        <div class="product-name">Ürün Adı Şablonu</div>
+        <div class="product-rating">
+          <span class="stars">☆☆☆☆☆</span>
+          <span class="rating-count">(0)</span>
+        </div>
+        <div class="product-footer">
+          <div class="price-wrap">
+            <div class="price">₺0</div>
+            <div class="price-rp">veya 0 RP</div>
+          </div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// Mega Menu Arama/Filtreleme İşlevi
+function filterChampions() {
+  let input = document.getElementById('champSearchInput').value.toLowerCase();
+  let items = document.getElementById('champListContainer').getElementsByClassName('champ-item');
+  
+  for (let i = 0; i < items.length; i++) {
+    let name = items[i].getElementsByTagName("span")[0].innerText.toLowerCase();
+    if (name.indexOf(input) > -1) {
+      items[i].style.display = "flex";
+    } else {
+      items[i].style.display = "none";
+    }
+  }
+}
+
+// Sepete Ekle Butonu Efekti
+document.querySelectorAll('.add-btn').forEach(btn => {
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    this.textContent = '✓';
+    this.style.color = '#C89B3C';
+    this.style.borderColor = '#C89B3C';
+    setTimeout(() => { this.textContent = '+'; this.style.color = ''; this.style.borderColor = ''; }, 1500);
+  });
+});
+</script>
