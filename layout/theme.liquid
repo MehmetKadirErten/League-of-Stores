@@ -716,6 +716,26 @@ function showToast(msg){
     els.forEach(function(el){obs.observe(el);});
   }
 })();
+// Şampiyon listesindeki elemanları otomatik olarak Shopify mağazasına bağlama
+document.addEventListener("DOMContentLoaded", function() {
+  // Menüdeki tüm şampiyon kartlarını buluyoruz
+  const champItems = document.querySelectorAll('.champ-item');
+  
+  champItems.forEach(item => {
+    const span = item.querySelector('span');
+    if (span) {
+      const champName = span.textContent.trim();
+      item.style.cursor = 'pointer';
+      
+      // Herhangi bir şampiyona tıklandığında çalışacak fonksiyon
+      item.onclick = function(e) {
+        e.preventDefault();
+        // Shopify'ın yerleşik üretici/marka filtreleme rotasına yönlendiriyoruz
+        window.location.href = '/collections/vendors?q=' + encodeURIComponent(champName);
+      };
+    }
+  });
+});
 </script>
   </body>
 </html>
