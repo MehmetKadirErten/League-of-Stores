@@ -63,7 +63,65 @@
     </div>
     <a href="#" class="view-all">Tümünü Gör &rarr;</a>
   </div>
-  <div class="product-grid" id="productGrid"></div>
+  <div class="product-grid" id="productGrid">
+  {% for product in collections.all.products limit: 4 %}
+    
+    <div class="product-card" style="animation-delay: {{ forloop.index0 | times: 0.1 | plus: 0.3 }}s;">
+      
+      {% if product.compare_at_price > product.price %}
+        <div class="badge new-badge">İNDİRİM</div>
+      {% elsif product.tags.first %}
+        <div class="badge">{{ product.tags.first }}</div>
+      {% endif %}
+
+      <div class="product-img">
+        <div class="product-glow"></div>
+        <a href="{{ product.url }}" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;">
+          {% if product.featured_image %}
+            <img src="{{ product.featured_image | image_url: width: 400 }}" alt="{{ product.title }}" style="max-width: 85%; max-height: 85%; object-fit: contain; position: relative; z-index: 2; transition: transform 0.4s ease;">
+          {% else %}
+            <div class="img-placeholder-text">Görsel Bekleniyor</div>
+          {% endif %}
+        </a>
+      </div>
+
+      <div class="product-info">
+        <div class="product-champion">{{ product.vendor | default: "Runeterra" }}</div>
+        
+        <div class="product-name">
+          <a href="{{ product.url }}" style="color: inherit; text-decoration: none;">{{ product.title }}</a>
+        </div>
+        
+        <div class="product-rating">
+          <span class="stars">★★★★★</span>
+          <span class="rating-count">(0)</span>
+        </div>
+
+        <div class="product-footer">
+          <div class="price-wrap">
+            <div class="price">
+              {% if product.compare_at_price > product.price %}
+                <span class="price-original">{{ product.compare_at_price | money }}</span>
+              {% endif %}
+              {{ product.price | money }}
+            </div>
+            <div class="price-rp">veya {{ product.price | divided_by: 10 }} RP</div>
+          </div>
+          
+          <form method="post" action="/cart/add" style="margin: 0;">
+            <input type="hidden" name="id" value="{{ product.variants.first.id }}" />
+            <button type="submit" class="add-btn" data-name="{{ product.title | escape }}" onclick="addToCartReal(this)">+</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  {% else %}
+    <p style="color: #C8AA6E; grid-column: span 4; text-align: center; font-size: 16px;">
+      Vitrin bekliyor... Shopify panelinden ürün eklediğinizde burada belirecekler!
+    </p>
+  {% endfor %}
+</div>
 </div>
 
 <div class="banner-section reveal">
