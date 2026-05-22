@@ -467,6 +467,7 @@
 // Particles
 (function(){
   var c=document.getElementById('particles');
+  if(!c) return;
   for(var i=0;i<18;i++){
     var p=document.createElement('div');
     p.className='particle';
@@ -481,10 +482,11 @@
 
 // Nav scroll
 window.addEventListener('scroll',function(){
-  document.getElementById('mainNav').classList.toggle('scrolled',window.scrollY>20);
+  var nav = document.getElementById('mainNav');
+  if(nav) nav.classList.toggle('scrolled',window.scrollY>20);
 },{passive:true});
 
-// Categories
+// Categories (Statik vitrin)
 var cats=[
   {icon:'👕',name:'Giyim',count:'124 ürün'},
   {icon:'🏆',name:'Figürler',count:'87 ürün'},
@@ -494,65 +496,53 @@ var cats=[
 ];
 (function(){
   var g=document.getElementById('catGrid');
-  cats.forEach(function(cat,i){
-    var d=document.createElement('div');
-    d.className='cat-card';
-    d.style.animationDelay=(i*.08)+'s';
-    d.innerHTML='<span class="cat-icon">'+cat.icon+'</span><div class="cat-name">'+cat.name+'</div><div class="cat-count">'+cat.count+'</div>';
-    d.onclick=function(){showToast(cat.name+' kategorisine gidiliyor...');};
-    g.appendChild(d);
-  });
+  if(g){
+    cats.forEach(function(cat,i){
+      var d=document.createElement('div');
+      d.className='cat-card';
+      d.style.animationDelay=(i*.08)+'s';
+      d.innerHTML='<span class="cat-icon">'+cat.icon+'</span><div class="cat-name">'+cat.name+'</div><div class="cat-count">'+cat.count+'</div>';
+      d.onclick=function(){showToast(cat.name+' kategorisine gidiliyor...');};
+      g.appendChild(d);
+    });
+  }
 })();
 
-// Products
-var prods=[
-  {champ:'Ahri',name:'Kuyruk Kolye',price:'299',rp:'3.000',stars:5,reviews:48,badge:null,orig:null},
-  {champ:'Yasuo',name:'Rüzgar Kılıcı Figür',price:'849',rp:'8.500',stars:4,reviews:32,badge:'YENİ',orig:null},
-  {champ:'Jinx',name:'Fishbones Çanta',price:'549',rp:'5.500',stars:5,reviews:71,badge:null,orig:'699'},
-  {champ:'Mordekaiser',name:'Metal Kupa Seti',price:'449',rp:'4.500',stars:4,reviews:19,badge:null,orig:null}
-];
-(function(){
-  var g=document.getElementById('productGrid');
-  prods.forEach(function(p,i){
-    var stars='★'.repeat(p.stars)+'☆'.repeat(5-p.stars);
-    var badge=p.badge?'<div class="badge new-badge">'+p.badge+'</div>':'';
-    var orig=p.orig?'<span class="price-original">&#x20BA;'+p.orig+'</span>':'';
-    var d=document.createElement('div');
-    d.className='product-card';
-    d.style.animationDelay=(.3+i*.1)+'s';
-    d.innerHTML=badge+'<div class="product-img"><div class="product-glow"></div><div class="img-placeholder-text">Görsel Eklenecek</div></div><div class="product-info"><div class="product-champion">'+p.champ+'</div><div class="product-name">'+p.name+'</div><div class="product-rating"><span class="stars">'+stars+'</span><span class="rating-count">('+p.reviews+')</span></div><div class="product-footer"><div class="price-wrap"><div class="price">'+orig+'&#x20BA;'+p.price+'</div><div class="price-rp">veya '+p.rp+' RP</div></div><button class="add-btn" data-name="'+p.name+'">+</button></div></div>';
-    g.appendChild(d);
-  });
-  document.querySelectorAll('.add-btn').forEach(function(btn){
-    btn.addEventListener('click',function(e){
-      e.stopPropagation();
-      if(this.classList.contains('added'))return;
-      var n=this.getAttribute('data-name');
-      this.classList.add('added');
-      this.textContent='✓';
-      var cc=document.getElementById('cartCount');
-      cc.textContent=parseInt(cc.textContent)+1;
-      showToast(n+' sepete eklendi!');
-      var self=this;
-      setTimeout(function(){self.classList.remove('added');self.textContent='+';},2000);
-    });
-  });
-})();
+// Sepete Ekle Animasyonu (Shopify Gerçek Ürünler İçin)
+function addToCartReal(btn) {
+  if(btn.classList.contains('added')) return;
+  var n = btn.getAttribute('data-name');
+  btn.classList.add('added');
+  btn.textContent = '✓';
+  var cc = document.getElementById('cartCount');
+  if(cc) cc.textContent = parseInt(cc.textContent) + 1;
+  showToast(n + ' sepete eklendi!');
+  setTimeout(function(){
+    btn.classList.remove('added');
+    btn.textContent = '+';
+  }, 2000);
+}
 
 // Slider
 var cur=0,total=3,timer=null;
 function goToSlide(i){
   cur=(i+total)%total;
-  document.getElementById('slidesContainer').style.transform='translateX(-'+(cur*100)+'%)';
+  var cont = document.getElementById('slidesContainer');
+  if(cont) cont.style.transform='translateX(-'+(cur*100)+'%)';
   document.querySelectorAll('.slider-dot').forEach(function(d,idx){d.classList.toggle('active',idx===cur);});
 }
 function moveSlide(d){resetTimer();goToSlide(cur+d);}
-function resetTimer(){clearInterval(timer);timer=setInterval(function(){goToSlide(cur+1);},4500);}
+function resetTimer(){
+  clearInterval(timer);
+  timer=setInterval(function(){goToSlide(cur+1);},4500);
+}
 resetTimer();
 
 // Champion search
 function filterChampions(){
-  var v=document.getElementById('champSearchInput').value.toLowerCase();
+  var input = document.getElementById('champSearchInput');
+  if(!input) return;
+  var v=input.value.toLowerCase();
   var items=document.getElementById('champListContainer').getElementsByClassName('champ-item');
   for(var i=0;i<items.length;i++){
     var n=items[i].getElementsByTagName('span')[0].innerText.toLowerCase();
@@ -564,19 +554,29 @@ function filterChampions(){
 var tTimer=null;
 function showToast(msg){
   var t=document.getElementById('toast');
-  document.getElementById('toastMsg').textContent=msg;
-  t.classList.add('show');
-  clearTimeout(tTimer);
-  tTimer=setTimeout(function(){t.classList.remove('show');},2800);
+  var tMsg=document.getElementById('toastMsg');
+  if(t && tMsg) {
+    tMsg.textContent=msg;
+    t.classList.add('show');
+    clearTimeout(tTimer);
+    tTimer=setTimeout(function(){t.classList.remove('show');},2800);
+  }
 }
 
 // Scroll reveal
 (function(){
   var els=document.querySelectorAll('.reveal');
-  var obs=new IntersectionObserver(function(entries){
-    entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
-  },{threshold:.1});
-  els.forEach(function(el){obs.observe(el);});
+  if(els.length > 0 && window.IntersectionObserver) {
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          e.target.classList.add('visible');
+          obs.unobserve(e.target);
+        }
+      });
+    },{threshold:.1});
+    els.forEach(function(el){obs.observe(el);});
+  }
 })();
 </script>
   </body>
