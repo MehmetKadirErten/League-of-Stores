@@ -1,86 +1,285 @@
-{{ 'template-collection.css' | asset_url | stylesheet_tag }}
-{{ 'component-card.css' | asset_url | stylesheet_tag }}
-{{ 'component-price.css' | asset_url | stylesheet_tag }}
+<style>
+/* Senin hazırladığın Efsanevi CSS Kodları */
+:root {
+  --gold: #C8AA6E; --gold-bright: #C89B3C; --gold-dark: #785A28; --gold-dim: rgba(200,170,110,0.18);
+  --bg: #020810; --bg-card: rgba(6,20,36,0.55); --bg-card-hover: rgba(10,28,50,0.8);
+}
+.page-col { max-width: 1340px; margin: 0 auto; padding: 32px 40px 80px; position: relative; z-index: 1; font-family: 'Rajdhani', sans-serif;}
+.breadcrumb { font-size: 11px; letter-spacing: 2.5px; color: rgba(200,170,110,0.4); margin-bottom: 28px; display: flex; align-items: center; gap: 8px; animation: fadeUp 0.5s 0.1s ease both; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:none; } }
+.breadcrumb a { color: rgba(200,170,110,0.4); text-decoration: none; transition: color 0.2s; }
+.breadcrumb a:hover { color: var(--gold); }
+.bc-sep { opacity: 0.3; }
+.breadcrumb .current { color: var(--gold-bright); text-transform: uppercase;}
 
-<div class="collection-container">
-  
-  <div class="collection-header">
-    <div class="ornament-diamond" style="width:10px; height:10px; background: var(--gold-bright); transform: rotate(45deg); margin: 0 auto 15px;"></div>
-    <h1 class="collection-title">{{ collection.title | upcase }}</h1>
-    
-    {%- if collection.description != blank -%}
-      <p class="collection-desc">{{ collection.description }}</p>
-    {%- endif -%}
-    
-    <div class="collection-count">{{ collection.products_count }} Eser Bulundu</div>
+.cat-banner { position: relative; overflow: hidden; border: 1px solid var(--gold-dim); padding: 52px 40px; margin-bottom: 44px; display: flex; flex-direction: column; align-items: center; text-align: center; animation: fadeUp 0.5s 0.15s ease both; background: linear-gradient(180deg, rgba(6,20,36,0.6) 0%, rgba(2,8,16,0.95) 100%); }
+.cat-banner::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(200,155,60,0.12) 0%, transparent 70%); }
+.cat-banner::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 200px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-bright), transparent); }
+.cat-banner-bg-text { position: absolute; font-family: 'Cinzel', serif; font-size: 140px; font-weight: 700; letter-spacing: 8px; color: rgba(200,170,110,0.03); top: 50%; left: 50%; transform: translate(-50%,-50%); white-space: nowrap; pointer-events: none; user-select: none; }
+.cat-icon { font-size: 44px; margin-bottom: 16px; position: relative; z-index: 1; animation: iconPulse 3s ease-in-out infinite; filter: drop-shadow(0 0 16px rgba(200,155,60,0.5)); }
+@keyframes iconPulse { 0%,100% { filter: drop-shadow(0 0 12px rgba(200,155,60,0.3)); } 50% { filter: drop-shadow(0 0 28px rgba(200,155,60,0.7)); } }
+.cat-title { font-family: 'Cinzel', serif; font-size: 48px; font-weight: 700; letter-spacing: 8px; color: var(--gold-bright); position: relative; z-index: 1; margin-bottom: 12px; }
+.cat-desc { font-size: 16px; color: #9a7d4a; max-width: 580px; line-height: 1.7; position: relative; z-index: 1; }
+.cat-stats { display: flex; gap: 40px; margin-top: 28px; position: relative; z-index: 1; }
+.cat-stat { text-align: center; }
+.cat-stat-num { font-family: 'Cinzel', serif; font-size: 22px; color: var(--gold-bright); }
+.cat-stat-label { font-size: 11px; letter-spacing: 2px; color: rgba(200,170,110,0.45); margin-top: 3px; }
+
+.layout-grid { display: grid; grid-template-columns: 268px 1fr; gap: 36px; align-items: start; }
+.sidebar { background: var(--bg-card); border: 1px solid var(--gold-dim); padding: 0; position: sticky; top: 78px; animation: fadeUp 0.5s 0.2s ease both; overflow: hidden; }
+.sidebar-header { padding: 18px 22px; border-bottom: 1px solid var(--gold-dim); font-family: 'Cinzel', serif; font-size: 14px; letter-spacing: 3px; color: var(--gold-bright); display: flex; justify-content: space-between; align-items: center; }
+.sidebar-reset { font-family: 'Rajdhani', sans-serif; font-size: 11px; letter-spacing: 1px; color: rgba(200,170,110,0.4); cursor: pointer; transition: color 0.2s; background: none; border: none; }
+.sidebar-reset:hover { color: var(--gold); }
+.filter-group { border-bottom: 1px solid var(--gold-dim); padding: 20px 22px; }
+.filter-group-title { font-size: 11px; letter-spacing: 2.5px; color: rgba(200,170,110,0.5); margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; }
+.filter-body { transition: max-height 0.35s ease, opacity 0.3s ease; max-height: 300px; opacity: 1; overflow: hidden; }
+.price-inputs { display: flex; gap: 8px; align-items: center; margin-bottom: 14px; }
+.price-inp { flex: 1; background: rgba(0,0,0,0.3); border: 1px solid var(--gold-dim); color: var(--gold); font-family: 'Rajdhani', sans-serif; font-size: 14px; padding: 7px 10px; outline: none; text-align: center; }
+.price-inp:focus { border-color: var(--gold-bright); }
+.price-sep { font-size: 12px; color: rgba(200,170,110,0.3); }
+input[type=range] { -webkit-appearance: none; width: 100%; height: 4px; background: rgba(200,170,110,0.1); position: relative; margin: 6px 0; outline:none;}
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; background: var(--gold-bright); cursor: pointer; border: 2px solid var(--bg); clip-path: polygon(50% 0%,100% 50%,50% 100%,0% 50%); }
+
+.products-area { animation: fadeUp 0.5s 0.25s ease both; }
+.products-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 16px; flex-wrap: wrap; }
+.results-info { font-size: 13px; color: rgba(200,170,110,0.5); }
+.results-info strong { color: var(--gold); }
+.toolbar-right { display: flex; align-items: center; gap: 12px; }
+.search-inp { background: rgba(0,0,0,0.3); border: 1px solid var(--gold-dim); color: var(--gold); font-family: 'Rajdhani', sans-serif; font-size: 14px; padding: 8px 36px 8px 14px; outline: none; width: 220px; transition: border-color 0.2s, width 0.3s; clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%); }
+.search-inp:focus { border-color: var(--gold-bright); width: 260px; }
+.sort-select { background: rgba(0,0,0,0.3); border: 1px solid var(--gold-dim); color: var(--gold); font-family: 'Rajdhani', sans-serif; font-size: 13px; letter-spacing: 1px; padding: 8px 14px; outline: none; cursor: pointer; clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%); }
+.sort-select option { background: #040e1c; }
+.view-toggle { display: flex; gap: 4px; }
+.view-btn { width: 34px; height: 34px; background: transparent; border: 1px solid var(--gold-dim); color: rgba(200,170,110,0.4); cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.view-btn:hover, .view-btn.active { border-color: var(--gold-bright); color: var(--gold-bright); background: rgba(200,155,60,0.08); }
+
+.product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.product-grid.list-view { grid-template-columns: 1fr; }
+.product-card { background: linear-gradient(170deg, rgba(8,24,44,0.5) 0%, rgba(2,8,16,0.85) 100%); border: 1px solid var(--gold-dim); position: relative; overflow: hidden; display: flex; flex-direction: column; transition: border-color 0.35s, transform 0.35s, box-shadow 0.35s; cursor: pointer; }
+.product-card:hover { border-color: rgba(200,155,60,0.5); transform: translateY(-6px); box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(200,155,60,0.05); }
+.card-badge { position: absolute; top: 12px; left: 12px; z-index: 10; font-size: 10px; letter-spacing: 1.5px; padding: 4px 10px; font-weight: 600; clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%); }
+.badge-new { background: rgba(200,155,60,0.18); border: 1px solid rgba(200,155,60,0.4); color: var(--gold); }
+.badge-sale { background: rgba(180,60,60,0.18); border: 1px solid rgba(180,60,60,0.4); color: #e88; }
+.card-wishlist { position: absolute; top: 10px; right: 10px; z-index: 10; width: 32px; height: 32px; background: rgba(2,8,16,0.7); border: 1px solid var(--gold-dim); color: rgba(200,170,110,0.4); display: flex; align-items: center; justify-content: center; font-size: 15px; cursor: pointer; transition: all 0.25s; clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%); opacity: 0; transform: translateX(8px); }
+.product-card:hover .card-wishlist { opacity: 1; transform: none; }
+.card-wishlist:hover, .card-wishlist.active { color: #e74c3c; border-color: rgba(231,76,60,0.4); background: rgba(231,76,60,0.1); }
+.card-img { aspect-ratio: 1; background: rgba(4,12,22,0.8); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; padding: 28px; }
+.card-img img { max-width: 100%; max-height: 100%; object-fit: contain; position: relative; z-index: 1; transition: transform 0.45s cubic-bezier(0.25,0.46,0.45,0.94); filter: drop-shadow(0 4px 16px rgba(0,0,0,0.6)); }
+.product-card:hover .card-img img { transform: scale(1.1) translateY(-4px); }
+.card-img-placeholder { width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; font-size: 44px; position: relative; z-index: 1; filter: drop-shadow(0 0 12px rgba(200,155,60,0.3)); }
+.quick-add { position: absolute; bottom: -40px; left: 0; right: 0; z-index: 5; background: rgba(6,20,36,0.95); border-top: 1px solid var(--gold-dim); color: var(--gold); font-size: 11px; letter-spacing: 2px; padding: 10px; text-align: center; font-weight: 600; transition: bottom 0.3s cubic-bezier(0.25,0.46,0.45,0.94); cursor:pointer;}
+.product-card:hover .quick-add { bottom: 0; }
+.card-info { padding: 18px 18px 16px; flex: 1; display: flex; flex-direction: column; border-top: 1px solid rgba(200,170,110,0.06); }
+.card-faction { font-size: 10px; letter-spacing: 2.5px; color: var(--gold-dark); text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+.card-name { font-family: 'Cinzel', serif; font-size: 15px; color: var(--gold); margin-bottom: auto; line-height: 1.35; }
+.card-rating { display: flex; align-items: center; gap: 6px; margin: 10px 0; }
+.stars-small { font-size: 11px; color: var(--gold-bright); letter-spacing: 1px; }
+.rating-num { font-size: 12px; color: rgba(200,170,110,0.5); }
+.card-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(200,170,110,0.07); }
+.price-old { font-size: 12px; color: rgba(200,170,110,0.3); text-decoration: line-through; margin-bottom: 2px; }
+.price-main { font-family: 'Cinzel', serif; font-size: 18px; color: var(--gold-bright); font-weight: 700; }
+.price-rp { font-size: 10px; color: rgba(200,170,110,0.35); margin-top: 2px; letter-spacing: 1px; }
+.add-btn { width: 38px; height: 38px; background: transparent; border: 1px solid var(--gold-dark); color: var(--gold); font-size: 22px; font-weight: 300; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.25s; line-height: 1; clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%); flex-shrink: 0; }
+.add-btn:hover { border-color: var(--gold-bright); background: rgba(200,155,60,0.12); color: var(--gold-bright); transform: scale(1.08); }
+.add-btn.adding { animation: addPop 0.4s cubic-bezier(0.34,1.56,0.64,1); background: rgba(200,155,60,0.15); border-color: var(--gold-bright); }
+@keyframes addPop { 0%,100% { transform:scale(1); } 50% { transform:scale(1.25); } }
+
+/* Liste Görünümü */
+.product-grid.list-view .product-card { flex-direction: row; }
+.product-grid.list-view .card-img { width: 160px; flex-shrink: 0; aspect-ratio: auto; }
+.product-grid.list-view .card-info { padding: 20px 22px; }
+.product-grid.list-view .quick-add { display: none; }
+.no-results { grid-column: 1/-1; text-align: center; padding: 60px 0; color: rgba(200,170,110,0.3); font-family: 'Cinzel', serif; font-size: 18px; display: none; }
+.no-results.show { display: block; }
+</style>
+
+<div class="page-col">
+
+  <div class="breadcrumb">
+    <a href="{{ routes.root_url }}">MAĞAZA</a>
+    <span class="bc-sep">›</span>
+    <span class="current">{{ collection.title }}</span>
   </div>
 
-  {%- paginate collection.products by 24 -%}
-  <div class="product-grid">
-    {%- for product in collection.products -%}
-      
-      <div class="product-card" style="animation-delay: {{ forloop.index0 | times: 0.1 | plus: 0.2 }}s;" onclick="window.location.href='{{ product.url }}'">
-        
-        {%- if product.compare_at_price != blank and product.compare_at_price > product.price -%}
-          <div class="badge new-badge">İNDİRİM</div>
-        {%- elsif product.tags.first -%}
-          <div class="badge">{{ product.tags.first }}</div>
-        {%- endif -%}
+  <div class="cat-banner">
+    <div class="cat-banner-bg-text">{{ collection.title | upcase }}</div>
+    <div class="cat-icon">💎</div>
+    <h1 class="cat-title">{{ collection.title | upcase }}</h1>
+    <p class="cat-desc">{{ collection.description | strip_html | default: "Runeterra'nın gizemli kalıntıları, şampiyonların simgeleri ve epik detaylar." }}</p>
+    <div class="cat-stats">
+      <div class="cat-stat"><div class="cat-stat-num" id="statCount">{{ collection.all_products_count }}</div><div class="cat-stat-label">ÜRÜN</div></div>
+    </div>
+  </div>
 
-        <div class="product-img">
-          <div class="product-glow"></div>
-          <a href="{{ product.url }}" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;" onclick="event.stopPropagation();">
-            {%- if product.featured_image -%}
-              <img src="{{ product.featured_image | image_url: width: 400 }}" alt="{{ product.title | escape }}" style="max-width: 85%; max-height: 85%; object-fit: contain; position: relative; z-index: 2; transition: transform 0.4s ease;">
-            {%- else -%}
-              <div class="img-placeholder-text">Görsel Bekleniyor</div>
-            {%- endif -%}
-          </a>
-        </div>
+  <div class="layout-grid">
 
-        <div class="product-info">
-          <div class="product-champion">{{ product.vendor | default: "Runeterra" }}</div>
-          
-          <div class="product-name">
-            <a href="{{ product.url }}" style="color: inherit; text-decoration: none;" onclick="event.stopPropagation();">{{ product.title }}</a>
-          </div>
-          
-          <div class="product-rating">
-            <span class="stars">★★★★★</span>
-            <span class="rating-count">(0)</span>
-          </div>
-
-          <div class="product-footer">
-            <div class="price-wrap">
-              <div class="price">
-                {%- if product.compare_at_price != blank and product.compare_at_price > product.price -%}
-                  <span class="price-original">{{ product.compare_at_price | money }}</span>
-                {%- endif -%}
-                {{ product.price | money }}
-              </div>
-              <div class="price-rp">veya {{ product.price | divided_by: 10 }} RP</div>
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        FİLTRELER
+        <button class="sidebar-reset" onclick="resetFilters()">SIFIRLA</button>
+      </div>
+      <div class="filter-group">
+        <div class="filter-group-title">FİYAT ARALIĞI</div>
+        <div class="filter-body">
+          <div class="price-range-wrap">
+            <div class="price-inputs">
+              <input type="number" class="price-inp" id="priceMin" value="0" placeholder="Min" readonly>
+              <span class="price-sep">—</span>
+              <input type="number" class="price-inp" id="priceMax" value="5000" placeholder="Max" oninput="updateSlider(this.value)">
             </div>
-            
-            <form method="post" action="/cart/add" style="margin: 0;" onclick="event.stopPropagation();">
-              <input type="hidden" name="id" value="{{ product.variants.first.id }}" />
-              <button type="submit" class="add-btn" data-name="{{ product.title | escape }}" onclick="addToCartReal(this)">+</button>
-            </form>
+            <input type="range" id="priceSlider" min="0" max="5000" value="5000" oninput="updatePrice(this.value)">
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="products-area">
+      <div class="products-toolbar">
+        <div class="results-info"><strong id="resultCount">{{ collection.products_count }}</strong> ürün bulundu</div>
+        <div class="toolbar-right">
+          <div class="search-wrap" style="position:relative;">
+            <input type="text" class="search-inp" id="searchInp" placeholder="Ürün ara..." oninput="filterProducts()">
+          </div>
+          <select class="sort-select" onchange="window.location.href='?sort_by='+this.value">
+            <option value="manual">Öne Çıkanlar</option>
+            <option value="price-ascending">Fiyat ↑</option>
+            <option value="price-descending">Fiyat ↓</option>
+            <option value="created-descending">En Yeniler</option>
+          </select>
+          <div class="view-toggle">
+            <button class="view-btn active" id="gridViewBtn" onclick="setView('grid')" title="Izgara">⊞</button>
+            <button class="view-btn" id="listViewBtn" onclick="setView('list')" title="Liste">☰</button>
           </div>
         </div>
       </div>
 
-    {%- else -%}
-      <p style="color: #C8AA6E; grid-column: span 4; text-align: center; font-size: 16px; padding: 60px 0;">
-        Bu koridorda henüz hiçbir ürün bulunmuyor. Shopify panelinden bu koleksiyona ürün eklediğinizde burada belirecektir!
-      </p>
-    {%- endfor -%}
+      {%- paginate collection.products by 24 -%}
+      <div class="product-grid" id="productGrid">
+        {%- for product in collection.products -%}
+          <div class="product-card" data-name="{{ product.title | escape }}" data-price="{{ product.price | divided_by: 100 }}" onclick="window.location.href='{{ product.url }}'">
+            
+            {%- if product.compare_at_price > product.price -%}
+              <span class="card-badge badge-sale">İNDİRİM</span>
+            {%- elsif product.tags contains 'Yeni' -%}
+              <span class="card-badge badge-new">YENİ</span>
+            {%- endif -%}
+            
+            <button class="card-wishlist" onclick="event.stopPropagation(); toggleWish(this)">♡</button>
+            
+            <div class="card-img">
+              {%- if product.featured_image -%}
+                <img src="{{ product.featured_image | image_url: width: 600 }}" alt="{{ product.title | escape }}">
+              {%- else -%}
+                <div class="card-img-placeholder">✦</div>
+              {%- endif -%}
+              <div class="quick-add" onclick="event.stopPropagation(); addCartAjax(this, '{{ product.title | escape }}', {{ product.variants.first.id }})">+ SEPETE EKLE</div>
+            </div>
+            
+            <div class="card-info">
+              <div class="card-faction">{{ product.vendor | default: "Runeterra" | upcase }}</div>
+              <div class="card-name">{{ product.title }}</div>
+              <div class="card-rating"><span class="stars-small">★★★★★</span><span class="rating-num">4.8</span></div>
+              <div class="card-footer">
+                <div class="price-wrap">
+                  {%- if product.compare_at_price > product.price -%}
+                    <div class="price-old">{{ product.compare_at_price | money }}</div>
+                  {%- endif -%}
+                  <div class="price-main">{{ product.price | money }}</div>
+                  <div class="price-rp">veya {{ product.price | divided_by: 10 }} RP</div>
+                </div>
+                <button class="add-btn" onclick="event.stopPropagation(); addCartAjax(this, '{{ product.title | escape }}', {{ product.variants.first.id }})">+</button>
+              </div>
+            </div>
+          </div>
+        {%- else -%}
+          <div class="no-results show" id="noResults" style="display:block;">Bu koridorda henüz ürün bulunmuyor.</div>
+        {%- endfor -%}
+        <div class="no-results" id="noResultsFilter">Aramanıza uygun ürün bulunamadı.</div>
+      </div>
+      {%- endpaginate -%}
+
+    </div>
   </div>
-  {%- endpaginate -%}
 </div>
 
-{% schema %}
-{
-  "name": "Product Grid",
-  "settings": []
+<script>
+// Wishlist Toggle
+function toggleWish(btn) {
+  btn.classList.toggle('active');
+  btn.textContent = btn.classList.contains('active') ? '♥' : '♡';
 }
-{% endschema %}
+
+// Izgara / Liste Görünümü
+function setView(v) {
+  const grid = document.getElementById('productGrid');
+  grid.classList.toggle('list-view', v === 'list');
+  document.getElementById('gridViewBtn').classList.toggle('active', v === 'grid');
+  document.getElementById('listViewBtn').classList.toggle('active', v === 'list');
+}
+
+// Filtreleme (Fiyat ve İsim Arama)
+function updatePrice(val) { document.getElementById('priceMax').value = val; filterProducts(); }
+function updateSlider(val) { document.getElementById('priceSlider').value = val; filterProducts(); }
+function resetFilters() {
+  document.getElementById('searchInp').value = '';
+  document.getElementById('priceMax').value = '5000';
+  document.getElementById('priceSlider').value = '5000';
+  filterProducts();
+}
+
+function filterProducts() {
+  const search = document.getElementById('searchInp').value.toLowerCase();
+  const maxPrice = parseInt(document.getElementById('priceMax').value) || 5000;
+  const cards = document.querySelectorAll('.product-card[data-name]');
+  let visible = 0;
+  
+  cards.forEach(card => {
+    const name = card.dataset.name.toLowerCase();
+    const price = parseInt(card.dataset.price);
+    if ((!search || name.includes(search)) && price <= maxPrice) {
+      card.style.display = 'flex';
+      visible++;
+    } else {
+      card.style.display = 'none';
+    }
+  });
+  
+  document.getElementById('resultCount').textContent = visible;
+  document.getElementById('noResultsFilter').style.display = (visible === 0 && cards.length > 0) ? 'block' : 'none';
+}
+
+// Sayfa Yenilenmeden Sepete Ekleme (AJAX)
+function addCartAjax(btn, title, variantId) {
+  btn.classList.add('adding');
+  if(btn.classList.contains('quick-add')) btn.textContent = 'EKLENDİ ✓';
+  
+  fetch(window.Shopify.routes.root + 'cart/add.js', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ items: [{ id: variantId, quantity: 1 }] })
+  })
+  .then(response => response.json())
+  .then(data => {
+    setTimeout(() => {
+      btn.classList.remove('adding');
+      if(btn.classList.contains('quick-add')) btn.textContent = '+ SEPETE EKLE';
+    }, 1000);
+    
+    // Sağ üstteki sepet sayısını güncelleme
+    const badge = document.getElementById('cartBadge');
+    if(badge) {
+      badge.textContent = parseInt(badge.textContent || 0) + 1;
+      badge.classList.add('show');
+    }
+    
+    // Toast (Bildirim) Çıkarma
+    let t = document.getElementById('toast');
+    if(!t) {
+      t = document.createElement('div');
+      t.className = 'toast';
+      t.id = 'toast';
+      document.body.appendChild(t);
+    }
+    t.textContent = '✓ ' + title + ' sepete eklendi';
+    t.classList.add('show');
+    setTimeout(() => t
