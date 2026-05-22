@@ -49,7 +49,37 @@
     </div>
     <a href="#" class="view-all">Tümünü Gör &rarr;</a>
   </div>
-  <div class="cat-grid" id="catGrid"></div>
+  <div class="cat-grid" id="catGrid">
+  
+  <div class="cat-card" style="animation-delay: 0s;" onclick="window.location.href='/collections/giyim'">
+    <span class="cat-icon">👕</span>
+    <div class="cat-name">Giyim</div>
+    <div class="cat-count">{{ collections['giyim'].all_products_count | default: 0 }} ürün</div>
+  </div>
+
+  <div class="cat-card" style="animation-delay: 0.08s;" onclick="window.location.href='/collections/figurler'">
+    <span class="cat-icon">🏆</span>
+    <div class="cat-name">Figürler</div>
+    <div class="cat-count">{{ collections['figurler'].all_products_count | default: 0 }} ürün</div>
+  </div>
+
+  <div class="cat-card" style="animation-delay: 0.16s;" onclick="window.location.href='/collections/aksesuar'">
+    <span class="cat-icon">💎</span>
+    <div class="cat-name">Aksesuar</div>
+    <div class="cat-count">{{ collections['aksesuar'].all_products_count | default: 0 }} ürün</div>
+  </div>
+
+  <div class="cat-card" style="animation-delay: 0.24s;" onclick="window.location.href='/collections/koleksiyon'">
+    <span class="cat-icon">🃏</span>
+    <div class="cat-name">Koleksiyon</div>
+    <div class="cat-count">{{ collections['koleksiyon'].all_products_count | default: 0 }} ürün</div>
+  </div>
+
+  <div class="cat-card" style="animation-delay: 0.32s;" onclick="window.location.href='/collections/hediyeler'">
+    <span class="cat-icon">🎁</span>
+    <div class="cat-name">Hediyeler</div>
+    <div class="cat-count">{{ collections['hediyeler'].all_products_count | default: 0 }} ürün</div>
+  </div>
 </div>
 
 <div class="section-divider"></div>
