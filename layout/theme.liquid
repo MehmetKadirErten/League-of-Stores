@@ -646,27 +646,6 @@ window.addEventListener('scroll',function(){
 },{passive:true});
 
 // Categories (Statik vitrin)
-var cats=[
-  {icon:'👕',name:'Giyim',count:'124 ürün'},
-  {icon:'🏆',name:'Figürler',count:'87 ürün'},
-  {icon:'💎',name:'Aksesuar',count:'95 ürün'},
-  {icon:'🃏',name:'Koleksiyon',count:'63 ürün'},
-  {icon:'🎁',name:'Hediyeler',count:'42 ürün'}
-];
-(function(){
-  var g=document.getElementById('catGrid');
-  if(g){
-    cats.forEach(function(cat,i){
-      var d=document.createElement('div');
-      d.className='cat-card';
-      d.style.animationDelay=(i*.08)+'s';
-      d.innerHTML='<span class="cat-icon">'+cat.icon+'</span><div class="cat-name">'+cat.name+'</div><div class="cat-count">'+cat.count+'</div>';
-      d.onclick=function(){showToast(cat.name+' kategorisine gidiliyor...');};
-      g.appendChild(d);
-    });
-  }
-})();
-
 // Sepete Ekle Animasyonu (Shopify Gerçek Ürünler İçin)
 function addToCartReal(btn) {
   if(btn.classList.contains('added')) return;
