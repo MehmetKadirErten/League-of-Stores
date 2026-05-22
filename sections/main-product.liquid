@@ -21,14 +21,6 @@
 
         <div class="zoom-hint">🔍 YAKLAŞTIR</div>
       </div>
-      
-      <div class="thumbnails">
-        {% for image in product.images limit: 4 %}
-          <div class="thumb {% if forloop.first %}active{% endif %}">
-            <img src="{{ image | image_url: width: 100 }}" style="width: 60%; height: 60%; object-fit: contain;">
-          </div>
-        {% endfor %}
-      </div>
     </div>
 
     <div class="info">
