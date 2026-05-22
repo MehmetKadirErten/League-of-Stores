@@ -740,6 +740,34 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   });
 });
+function copyCouponCode(code, element) {
+  // Tarayıcının pano (clipboard) özelliğini kullanarak metni kopyalıyoruz
+  navigator.clipboard.writeText(code).then(() => {
+    
+    // Tıklanan kutuya görsel "Kopyalandı" efekti veriyoruz
+    element.classList.add('copied');
+    const textSpan = element.querySelector('.coupon-text');
+    const iconSpan = element.querySelector('.copy-icon');
+    
+    textSpan.textContent = 'KOPYALANDI ✓';
+    iconSpan.style.display = 'none';
+    
+    // Sistemimizde zaten var olan sağ alt bildirimi (Toast) tetikleyelim
+    if (typeof showToast === 'function') {
+      showToast('Kupon kopyalandı: ' + code.toUpperCase());
+    }
+    
+    // 2 saniye sonra kuponu eski haline (VOLIBEAR20) döndürüyoruz
+    setTimeout(() => {
+      element.classList.remove('copied');
+      textSpan.textContent = code.toUpperCase();
+      iconSpan.style.display = 'inline-block';
+    }, 2000);
+    
+  }).catch(err => {
+    console.error('Kopyalama başarısız oldu: ', err);
+  });
+}
 </script>
   </body>
 </html>
